@@ -111,4 +111,36 @@
     }
   });
 
+  // --- Live Subsystem Status on Landing Cards ---
+  const elLandingDotLander = document.getElementById('landing-dot-lander');
+  const elLandingTextLander = document.getElementById('landing-text-lander');
+  const elLandingDotRover = document.getElementById('landing-dot-rover');
+  const elLandingTextRover = document.getElementById('landing-text-rover');
+  const elLandingDotDrone = document.getElementById('landing-dot-drone');
+  const elLandingTextDrone = document.getElementById('landing-text-drone');
+
+  function updateSubsystemStatus(landerState, roverState, droneState) {
+    if (landerState && elLandingDotLander && elLandingTextLander) {
+      const devState = (landerState.device_state || 'NOT_CONNECTED').toUpperCase();
+      const isOnline = devState === 'ONLINE';
+      elLandingDotLander.className = 'pill-dot ' + (isOnline ? 'online' : (devState === 'STALE' ? 'stale' : 'offline'));
+      elLandingTextLander.textContent = devState;
+    }
+    if (roverState && elLandingDotRover && elLandingTextRover) {
+      const isOnline = Boolean(roverState.connected);
+      elLandingDotRover.className = 'pill-dot ' + (isOnline ? 'online' : 'offline');
+      elLandingTextRover.textContent = isOnline ? 'ONLINE' : 'NOT CONNECTED';
+    }
+    if (droneState && elLandingDotDrone && elLandingTextDrone) {
+      const isOnline = Boolean(droneState.connected);
+      elLandingDotDrone.className = 'pill-dot ' + (isOnline ? 'online' : 'offline');
+      elLandingTextDrone.textContent = isOnline ? 'ONLINE' : 'NOT CONNECTED';
+    }
+  }
+
+  // Public Landing View Export
+  window.MMCLandingView = {
+    update: updateSubsystemStatus,
+  };
+
 })();
